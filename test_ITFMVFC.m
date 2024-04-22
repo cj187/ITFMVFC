@@ -13,10 +13,10 @@ matrix_data_2 = {'1,SYN_1','2,SYN_2'};
 datatype = 2;%1 real-world, 2 synthetic
 n_index = 12;%评价指标的个数，包括迭代次数和运行时间
 
-alpha_candidates = [0.001,0.01,0.1,1,10,100,1000]; %[0.001,0.01,0.1,1,10,100,1000]
-zeta_candidates = [1e2,1e3,1e4,1e5,1e6]; %[1e3,1e4,1e5]
-eta_candidates = [1.0,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0]; %[0.1,0.3,0.5,0.7,0.9]
-rho_candidates = [0.01,0.1,1,2,4,10]; %[0.01,0.1,1,2,4,10]
+alpha_candidates = 0.01; %[0.001,0.01,0.1,1,10,100,1000]
+zeta_candidates = 1e3; %[1e2,1e3,1e4,1e5,1e6]
+eta_candidates = 0.6; %[1.0,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0]
+rho_candidates = 2; %[0.01,0.1,1,2,4,10]
 eps = 1e-4;
 
 re_times = 20;
