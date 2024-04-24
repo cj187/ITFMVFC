@@ -1,8 +1,8 @@
 clc;
 clear;
 
-root_path = 'C:/Users/18738/Documents/MATLAB/DVHVC_MVFC/';
-% root_path = 'D:/Matlab/exp_cj/';
+root_path = 'C:/Users/Documents/MATLAB/ITFMVFC/';
+
 
 %% load data
 matrix_data_1 = {'1,3sources','2,Caltech101-7','3,Caltech_2','4,motion','5,WebKB','6,prokaryotic','7,100Leaves','8,20newsgroups','9,uci-digit',...
@@ -114,102 +114,13 @@ for ii = 1:1
                         for rho_i = 1:length(rho_candidates)
                             rho = rho_candidates(rho_i);
                             options = [alpha,zeta1,zeta2,eta,rho];
-
-                            %1:ACC; 2:NMI; 3:ARI; 4:F; 5:P; 6:R; 7:Purity; 8:CHI; 9:DBI; 10:SCI; 11:iter; 12:time
-                            index_name = ["ACC";"NMI";"ARI";"F";"P";"R";"Purity";"CH";"DB";"SC";"iter";"time"];
-                            cell_index = cell(n_index,1);
-
                             rerun_i = 1;
-                            err_times = 0;
-                            err_times1 = 0;
-                            isSave = 0;
-
                             while rerun_i <= re_times
-                                tic;
                                 [U,fail,tmp_iter] = DVHVC(data,H,W,options,n_cluster,n_data,n_view,d_view,eps);
-                                if(fail == 1)
-                                    err_times1 = err_times1+1;
-                                    if err_times1> 5
-                                        fprintf('Fail Error\n');
-                                        break;
-                                    end
-                                else
-                                    err_times1 = 0;
-                                    cell_index{12}(rerun_i,1) = toc;
-                                    cell_index{11}(rerun_i,1) = tmp_iter;
-                                    [~,label_all] = max(U);
-                                    idx = bestMap(truelabel,label_all);
-
-                                    cell_index{1}(rerun_i,1) = sum(idx==truelabel)/length(label_all);
-                                    cell_index{2}(rerun_i,1) = compute_nmi(truelabel,idx); % NMI
-                                    cell_index{3}(rerun_i,1) = compute_rand_index(truelabel,idx); % ARI
-                                    [cell_index{4}(rerun_i,1),cell_index{5}(rerun_i,1),cell_index{6}(rerun_i,1)] = compute_f(truelabel,idx); % F1, precision, recall
-                                    cell_index{7}(rerun_i,1) = compute_purity(truelabel,idx); %PUR
-
-                                    tmp_index = cell(3,1);
-                                    for k = 1:n_view
-                                        tmp_index{1}(k,1) = evalclusters(data{k}',idx,'CalinskiHarabasz').CriterionValues;
-                                        tmp_index{2}(k,1) = evalclusters(data{k}',idx,'DaviesBouldin').CriterionValues;
-                                        tmp_index{3}(k,1) = evalclusters(data{k}',idx,'silhouette').CriterionValues;
-                                    end
-
-                                    for i_index = 1:3
-                                        cell_index{i_index+7}(rerun_i,1) = mean(tmp_index{i_index});
-                                    end
-
-                                    if ~isnan(cell_index{8}(rerun_i,1))&&~isnan(cell_index{9}(rerun_i,1))&&~isnan(cell_index{10}(rerun_i,1))
-                                        rerun_i = rerun_i+1;
-                                        isSave = 1;
-                                        err_times = 0;
-                                    else
-                                        err_times = err_times+1;
-                                        if err_times > 5
-                                            fprintf('No proper initialization! rerun_i=%d\n',rerun_i);
-                                            for i_index = 1:n_index
-                                                cell_index{i_index}(rerun_i,:) = [];
-                                            end
-                                            break;
-                                        end
-
-                                    end
-
-
-                                end
-
                             end
-
-                            if isSave==1
-                                %% 分析指标
-                                max_index = zeros(n_index,1);mean_index = zeros(n_index,1);min_index = zeros(n_index,1);
-                                for i_index = 1:n_index
-                                    tmp_index = cell_index{i_index};
-                                    max_index(i_index) = max(tmp_index);
-                                    mean_index(i_index) = mean(tmp_index);
-                                    min_index(i_index) = min(tmp_index);
-                                end
-                                max_index = [index_name,num2str(max_index)];
-                                mean_index = [index_name,num2str(mean_index)];
-                                min_index = [index_name,num2str(min_index)];
-
-                                %% 保存指标
-                                folder2 = strcat('./Result/',algName,'/',type_str,num2str(data_i),'_',dataname,'/');
-                                if ~exist(folder2,'dir')
-                                    mkdir(folder2);
-                                end
-                                path_process = strcat(folder2,'process_result_',algName,'_',dataname,'_', num2str(model),'.xlsx');
-                                info = {'alpha',alpha,'zeta1',zeta1,'zeta2',zeta2,'eta',eta,'rho',rho};
-
-                                path_analysis = strcat(folder2,'analysis_result_',algName,'_',dataname,'_', num2str(model),'.xlsx');
-
-                                saveResult(path_process,path_analysis,info,cell_index);
-                                fprintf('Save Result Success!\n');
-                            end
-                            fprintf('End: Data %d model %d ii %d\n', data_i,model_i,ii);
                         end
                     end
                 end
             end
         end
     end
-end
-
