@@ -10,13 +10,8 @@ for k = 1:n_view
     [~,P0{k}] = kmeans(data{k}',n_cluster);
     dist_center_data{k} = pdist2(P0{k},data{k}');
     dist_center_data{k}(dist_center_data{k}==0) = 1e-6;
-    U = U + 1./((dist_center_data{k}.^2).*(ones(n_cluster,1)*sum(dist_center_data{k}.^(-2))));
 end
-U = U * (1/n_view);
-% U = 1./((dist_center_data{2}.^2).*(ones(n_cluster,1)*sum(dist_center_data{1}.^(-2))));
-% U = U';
-% U = initfcm(n_cluster,n_data);
-% U = randn(n_cluster,n_data);
+U = randn(n_cluster,n_data);
 iter_max = 150;
 min_impro = eps;
 
