@@ -5,12 +5,6 @@ zeta1 = options(2);
 zeta2 = options(3);
 eta = options(4);
 rho = options(5);
-U = zeros(n_cluster, n_data);
-for k = 1:n_view
-    [~,P0{k}] = kmeans(data{k}',n_cluster);
-    dist_center_data{k} = pdist2(P0{k},data{k}');
-    dist_center_data{k}(dist_center_data{k}==0) = 1e-6;
-end
 U = randn(n_cluster,n_data);
 iter_max = 150;
 min_impro = eps;
