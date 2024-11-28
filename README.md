@@ -1,1 +1,1 @@
-This is code and model for "Multiview Fuzzy Clustering with Multiplex Topological Connections".
+This is code and model for "Multi-View Fuzzy Clustering for Multi-Layer and Multi-Attribute Graphs".
